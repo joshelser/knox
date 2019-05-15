@@ -20,49 +20,50 @@
         <route path="/hbase/webui/">
             <rewrite apply="HBASEUI/hbase/inbound/master/root" to="request.url"/>
         </route>
+        <!-- Fixes the stylesheet on the logs servlet -->
+        <route path="/hbase/webui/logs/jetty-dir.css">
+          <rewrite apply="HBASEUI/hbase/inbound/logs/css" to="request.url"/>
+          <rewrite apply="HBASEUI/hbase/outbound/logs/css" to="response.body"/>
+        </route>
         <route path="/hbase/webui/**">
             <rewrite apply="HBASEUI/hbase/inbound/master/path" to="request.url"/>
             <rewrite apply="HBASEUI/hbase/outbound/headers" to="response.headers"/>
         </route>
-        <route path="/hbase/webui/**?**">
-            <rewrite apply="HBASEUI/hbase/inbound/master/query" to="request.url"/>
-            <rewrite apply="HBASEUI/hbase/outbound/tasks" to="response.body"/>
-        </route>
-        <route path="/hbase/webui/regionserver?**">
-            <rewrite apply="HBASEUI/hbase/inbound/regionserver/home" to="request.url"/>
+        <route path="/hbase/webui/static/**">
+          <rewrite apply="HBASEUI/hbase/inbound/static" to="request.url"/>
         </route>
         <route path="/hbase/webui/master?**">
             <rewrite apply="HBASEUI/hbase/inbound/master/home" to="request.url"/>
         </route>
-        <route path="/hbase/webui/logs?**">
-            <rewrite apply="HBASEUI/hbase/outbound/headers/logs" to="response.headers"/>
-        </route>
-        <route path="/hbase/webui/logs?{host}?{port}">
+        <route path="/hbase/webui/logs?{**}">
             <rewrite apply="HBASEUI/hbase/inbound/logs" to="request.url"/>
+            <rewrite apply="HBASEUI/hbase/outbound/logs" to="response.body"/>
         </route>
-        <route path="/hbase/webui/dump/">
-            <rewrite apply="HBASEUI/hbase/inbound/masterdump" to="request.url"/>
+        <route path="/hbase/webui/logs/{**}">
+            <rewrite apply="HBASEUI/hbase/inbound/logs/files" to="request.url"/>
         </route>
-         <route path="/hbase/webui/dump?{host}?{port}">
-            <rewrite apply="HBASEUI/hbase/inbound/dump" to="request.url"/>
-         </route>
-        <route path="/hbase/webui/jmx?{host}?{port}">
-            <rewrite apply="HBASEUI/hbase/inbound/jmx" to="request.url"/>
+        <route path="/hbase/webui/logLevel?{**}">
+          <rewrite apply="HBASEUI/hbase/inbound/loglevel" to="request.url"/>
+          <rewrite apply="HBASEUI/hbase/outbound/loglevel" to="response.body"/>
         </route>
-        <route path="/hbase/webui/jmx">
-           <rewrite apply="HBASEUI/hbase/inbound/masterjmx" to="request.url"/>
-        </route>
-        <route path="/hbase/webui/region.jsp?{**}">
+        <route path="/hbase/webui/regionserver/region.jsp?{**}">
            <rewrite apply="HBASEUI/hbase/inbound/regions" to="request.url"/>
+           <rewrite apply="HBASEUI/hbase/outbound/regions" to="response.body"/>
         </route>
-        <route path="/hbase/webui/storeFile.jsp?{**}">
+        <route path="/hbase/webui/regionserver/storeFile.jsp?{**}">
            <rewrite apply="HBASEUI/hbase/inbound/storefile" to="request.url"/>
         </route>
-        <route path="/hbase/webui/{host}/{post}/logs/{**}">
-           <rewrite apply="HBASEUI/hbase/inbound/logfile" to="request.url"/>
+        <route path="/hbase/webui/master/prof-output/{**}?{**}">
+          <rewrite apply="HBASEUI/hbase/inbound/master/prof_output" to="request.url"/>
+          <rewrite apply="HBASEUI/hbase/webui/outbound/headers/prof-output" to="response.headers"/>
         </route>
-        <route path="/hbase/webui/conf">
-            <rewrite apply="HBASEUI/hbase/outbound/configuration" to="response.body"/>
+        <route path="/hbase/webui/master/{**}?{**}">
+          <rewrite apply="HBASEUI/hbase/inbound/master/all_children" to="request.url"/>
+          <rewrite apply="HBASEUI/hbase/outbound/master/children" to="response.body"/>
+        </route>
+        <route path="/hbase/webui/regionserver/{**}?{**}">
+          <rewrite apply="HBASEUI/hbase/inbound/regionserver/all_children" to="request.url"/>
+          <rewrite apply="HBASEUI/hbase/outbound/regionserver/children" to="response.body"/>
         </route>
     </routes>
     <dispatch classname="org.apache.knox.gateway.hbase.HBaseDispatch"/>
